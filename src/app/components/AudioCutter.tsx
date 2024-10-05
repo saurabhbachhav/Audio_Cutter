@@ -130,7 +130,7 @@ export default function AudioCutter() {
       {/* Left-Side Buttons UI */}
       <Box className="sidebar">
         <Title order={3} className="dashboard-title">Dashboard</Title>
-        <Stack spacing="md">
+        <Stack spacing={20}> {/* Use numeric spacing */}
           <Button className="button" onClick={() => document.getElementById('file-upload')?.click()}>
             Upload Another File
           </Button>
