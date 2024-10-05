@@ -63,14 +63,6 @@ export default function AudioCutter() {
     }
   };
 
-  // Play or Pause the audio
-  const handlePlayPause = () => {
-    if (waveSurferInstance) {
-      waveSurferInstance.playPause();
-      setIsPlaying(!isPlaying); // Toggle play/pause state
-    }
-  };
-
   // Reset the audio selection and state
   const handleReset = () => {
     if (waveSurferInstance) {
@@ -90,7 +82,7 @@ export default function AudioCutter() {
       const endTime = (end / 100) * duration;
 
       // Create a new OfflineAudioContext for trimming
-      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       
       // Load the original audio into the buffer
       fetch(URL.createObjectURL(audioFile))
