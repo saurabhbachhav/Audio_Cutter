@@ -8,7 +8,6 @@ import WaveSurfer from 'wavesurfer.js';
 export default function AudioCutter() {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [waveSurferInstance, setWaveSurferInstance] = useState<WaveSurfer | null>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false); // Track play/pause state
   const [duration, setDuration] = useState<number>(0);
   const [start, setStart] = useState<number>(0);
   const [end, setEnd] = useState<number>(100);
@@ -22,7 +21,6 @@ export default function AudioCutter() {
         waveColor: '#888', // Light gray for waveform
         progressColor: '#9400D3', // Violet for progress
         barWidth: 2,
-        responsive: true,
         height: 150,
       });
 
@@ -57,15 +55,6 @@ export default function AudioCutter() {
       setAudioFile(files[0]);
       setStart(0); // Reset start point
       setEnd(100); // Reset end point
-      setIsPlaying(false); // Stop playing
-    }
-  };
-
-  // Play or Pause the audio
-  const handlePlayPause = () => {
-    if (waveSurferInstance) {
-      waveSurferInstance.playPause();
-      setIsPlaying(!isPlaying); // Toggle play/pause state
     }
   };
 
@@ -77,7 +66,6 @@ export default function AudioCutter() {
       setDuration(0);
       setStart(0);
       setEnd(100);
-      setIsPlaying(false);
     }
   };
 
