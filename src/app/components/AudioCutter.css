@@ -1,0 +1,65 @@
+/* src/components/AudioCutter.css */
+
+.container {
+  margin-top: 0;
+  display: flex;
+  align-items: flex-start;
+  background-color: #000; /* Full black background */
+  border-radius: 0;
+  height: 100vh;
+  padding: 20px;
+}
+
+.sidebar {
+  width: 250px;
+  margin-right: 20px;
+  padding: 20px;
+  background-color: #222; /* Slightly lighter black for left section */
+  border-radius: 8px;
+  border: 1px solid #444;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-title {
+  margin-bottom: 15px;
+  color: #9400D3; /* Violet text */
+}
+
+.button {
+  background-color: #9400d3;
+  color: white;
+  padding: 15px;
+}
+
+.dropzone {
+  border: 2px dashed #9400D3; /* Violet dashed border */
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #222; /* Darker background for drop area */
+  margin-bottom: 20px;
+}
+
+.waveform {
+  margin: 20px 0;
+  height: 150px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #444; /* Darker gray for waveform background */
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+}
+
+.slider-label {
+  font-weight: bold;
+  color: #fff; /* White text */
+}
+
+.trim-button {
+  background-color: #9400D3; /* Violet button */
+  color: white;
+  border-radius: 8px;
+  padding: 15px;
+  font-size: 16px;
+  margin-top: 20px;
+}

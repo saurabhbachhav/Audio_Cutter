@@ -4,10 +4,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button, Slider, Text, Title, Container, Group, Stack, Box } from '@mantine/core';
 import WaveSurfer from 'wavesurfer.js';
+import './AudioCutter.css'; // Import the CSS file
 
 export default function AudioCutter() {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [waveSurferInstance, setWaveSurferInstance] = useState<WaveSurfer | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false); // Track play/pause state
   const [duration, setDuration] = useState<number>(0);
   const [start, setStart] = useState<number>(0);
   const [end, setEnd] = useState<number>(100);
@@ -33,6 +35,8 @@ export default function AudioCutter() {
       wavesurfer.on('ready', () => {
         setDuration(wavesurfer.getDuration());
         setEnd(wavesurfer.getDuration());
+        wavesurfer.play(); // Automatically play when a new audio file is loaded
+        setIsPlaying(true); // Set playing state to true
       });
 
       wavesurfer.on('finish', () => {
@@ -51,10 +55,19 @@ export default function AudioCutter() {
     if (files) {
       if (waveSurferInstance) {
         waveSurferInstance.stop(); // Stop current audio
+        setIsPlaying(false); // Set playing state to false
       }
       setAudioFile(files[0]);
       setStart(0); // Reset start point
       setEnd(100); // Reset end point
+    }
+  };
+
+  // Play or Pause the audio
+  const handlePlayPause = () => {
+    if (waveSurferInstance) {
+      waveSurferInstance.playPause();
+      setIsPlaying(!isPlaying); // Toggle play/pause state
     }
   };
 
@@ -66,6 +79,7 @@ export default function AudioCutter() {
       setDuration(0);
       setStart(0);
       setEnd(100);
+      setIsPlaying(false);
     }
   };
 
@@ -119,39 +133,19 @@ export default function AudioCutter() {
   return (
     <Container
       size="lg"
-      style={{
-        marginTop: '0',
-        display: 'flex',
-        alignItems: 'flex-start',
-        backgroundColor: '#000', // Full black background
-        borderRadius: '0',
-        height: '100vh',
-        padding: '20px',
-      }}
+      className="container" // Use className for styling
     >
       {/* Left-Side Buttons UI */}
-      <Box
-        style={{
-          width: '250px',
-          marginRight: '20px',
-          padding: '20px',
-          backgroundColor: '#222', // Slightly lighter black for left section
-          borderRadius: '8px',
-          border: '1px solid #444',
-          boxShadow: '0 2px 4px rgba(255, 255, 255, 0.1)',
-        }}
-      >
-        <Title order={3} style={{ marginBottom: '15px', color: '#9400D3' }}> {/* Violet text */}
-          Dashboard
-        </Title>
+      <Box className="sidebar">
+        <Title order={3} className="dashboard-title">Dashboard</Title>
         <Stack spacing="md">
-          <Button fullWidth style={{ backgroundColor: '#9400D3', color: 'white', padding: '15px' }} onClick={() => document.getElementById('file-upload')?.click()}>
+          <Button className="button" onClick={() => document.getElementById('file-upload')?.click()}>
             Upload Another File
           </Button>
-          <Button fullWidth style={{ backgroundColor: '#9400D3', color: 'white', padding: '15px' }} onClick={handleReset}>
+          <Button className="button" onClick={handleReset}>
             Reset Selection
           </Button>
-          <Button fullWidth style={{ backgroundColor: '#9400D3', color: 'white', padding: '15px' }}>
+          <Button className="button">
             Help
           </Button>
         </Stack>
@@ -159,22 +153,12 @@ export default function AudioCutter() {
 
       {/* Main Section: Audio Showcase and Trimming */}
       <Box style={{ flex: 1 }}>
-        <Title align="center" style={{ color: '#fff', marginBottom: '20px' }}> {/* White text */}
+        <Title align="center" style={{ color: '#fff', marginBottom: '20px' }}>
           Audio Cutter
         </Title>
 
         {/* Custom Dropzone */}
-        <Box
-          style={{
-            border: '2px dashed #9400D3', // Violet dashed border
-            borderRadius: '10px',
-            padding: '20px',
-            textAlign: 'center',
-            cursor: 'pointer',
-            backgroundColor: '#222', // Darker background for drop area
-            marginBottom: '20px',
-          }}
-        >
+        <Box className="dropzone">
           <input
             type="file"
             accept="audio/*"
@@ -183,7 +167,7 @@ export default function AudioCutter() {
             id="file-upload"
           />
           <label htmlFor="file-upload" style={{ cursor: 'pointer' }}>
-            <Text size="lg" style={{ color: '#fff', fontWeight: 'bold' }}> {/* White text */}
+            <Text size="lg" style={{ color: '#fff', fontWeight: 'bold' }}>
               Drag and drop your audio file here, or click to select a file
             </Text>
           </label>
@@ -192,14 +176,7 @@ export default function AudioCutter() {
         {/* Waveform Visualization */}
         <div
           ref={waveformRef}
-          style={{
-            margin: '20px 0',
-            height: '150px',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            backgroundColor: '#444', // Darker gray for waveform background
-            boxShadow: '0 2px 8px rgba(255, 255, 255, 0.2)',
-          }}
+          className="waveform"
         ></div>
 
         {/* Sliders for Start and End Points */}
@@ -207,7 +184,7 @@ export default function AudioCutter() {
           <>
             <Group grow style={{ marginTop: '20px' }}>
               <div>
-                <Text style={{ fontWeight: 'bold', color: '#fff' }}> {/* White text */}
+                <Text className="slider-label">
                   Start Time: {((start / 100) * duration).toFixed(2)}s
                 </Text>
                 <Slider
@@ -222,7 +199,7 @@ export default function AudioCutter() {
                 />
               </div>
               <div>
-                <Text style={{ fontWeight: 'bold', color: '#fff' }}> {/* White text */}
+                <Text className="slider-label">
                   End Time: {((end / 100) * duration).toFixed(2)}s
                 </Text>
                 <Slider
@@ -240,15 +217,7 @@ export default function AudioCutter() {
 
             <Button
               fullWidth
-              mt="lg"
-              style={{
-                backgroundColor: '#9400D3', // Violet button
-                color: 'white',
-                borderRadius: '8px',
-                padding: '15px',
-                fontSize: '16px',
-                marginTop: '20px',
-              }}
+              className="trim-button"
               onClick={handleTrim}
             >
               Trim Audio
